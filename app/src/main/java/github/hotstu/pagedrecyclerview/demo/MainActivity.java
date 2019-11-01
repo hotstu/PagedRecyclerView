@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +21,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MySwipeRefreshLayout swipeRefreshLayout = new MySwipeRefreshLayout(this);
+        BouncingFrameLayout swipeRefreshLayout = new BouncingFrameLayout(this);
+        TextView header = new TextView(this);
+        BouncingFrameLayout.LayoutParams layoutParams = swipeRefreshLayout.generateDefaultLayoutParams();
+        layoutParams.height = 300;
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        header.setText("HEADER");
+        layoutParams.setLayoutRole(BouncingFrameLayout.LayoutParams.HEADER);
+        swipeRefreshLayout.addView(header, layoutParams);
         RecyclerView recyclerView = new RecyclerView(this);
         swipeRefreshLayout.addView(recyclerView);
 //
