@@ -1,7 +1,6 @@
 package github.hotstu.pagedrecyclerview.demo;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,32 +20,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BouncingFrameLayout swipeRefreshLayout = new BouncingFrameLayout(this);
-        TextView header = new TextView(this);
-        BouncingFrameLayout.LayoutParams layoutParams = swipeRefreshLayout.generateDefaultLayoutParams();
-        layoutParams.height = 300;
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        header.setText("HEADER");
-        layoutParams.setLayoutRole(BouncingFrameLayout.LayoutParams.HEADER);
-        swipeRefreshLayout.addView(header, layoutParams);
+
         RecyclerView recyclerView = new RecyclerView(this);
-        swipeRefreshLayout.addView(recyclerView);
-//
-//        swipeRefreshLayout.setOnRefreshListener(new NestSwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                }, 3000);
-//            }
-//        });
-        setContentView(swipeRefreshLayout);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        setContentView(recyclerView);
+        LinearLayoutManager layout = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layout);
         MOTypedRecyclerAdapter adapter = new MOTypedRecyclerAdapter();
         adapter.addDelegate(new MOTypedRecyclerAdapter.AdapterDelegate() {
             @Override
@@ -57,35 +35,94 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(MOTypedRecyclerAdapter adapter, RecyclerView.ViewHolder holder, Object data) {
+                if (holder.itemView instanceof BouncingFrameLayout) {
+                    BouncingFrameLayout itemView = (BouncingFrameLayout) holder.itemView;
+                    itemView.setBouncingEventListener(type -> {
+                        int firstVisibleItemPosition = layout.findFirstVisibleItemPosition();
+                        int target = firstVisibleItemPosition;
+                        if (type == BouncingFrameLayout.FLAG_REACH_BOTTOM) {
+                            target += 1;
+                        } else if (type == BouncingFrameLayout.FLAG_REACH_TOP) {
+                            target -= 1;
+                        }
+
+                        if (target < 0) {
+                            target = 0;
+                        }
+                        layout.smoothScrollToPosition(recyclerView, null, target);
+
+                    });
+                }
             }
 
             @Override
             public boolean isDelegateOf(Class<?> clazz, Object item, int position) {
-                return true;
+                return position % 2 == 0;
+            }
+        });
+
+        adapter.addDelegate(new MOTypedRecyclerAdapter.AdapterDelegate() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(MOTypedRecyclerAdapter adapter, ViewGroup parent) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nestedlist, parent, false);
+                RecyclerView list = view.findViewById(R.id.list);
+                MOCommonViewHolder holder = new MOCommonViewHolder(view);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(parent.getContext());
+                list.setLayoutManager(linearLayoutManager);
+                MOTypedRecyclerAdapter adapter1 = new MOTypedRecyclerAdapter();
+                adapter1.addDelegate(new MOTypedRecyclerAdapter.AdapterDelegate() {
+                    @Override
+                    public RecyclerView.ViewHolder onCreateViewHolder(MOTypedRecyclerAdapter adapter, ViewGroup parent) {
+                        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_simple, parent, false);
+                        return new MOCommonViewHolder(inflate);
+                    }
+
+                    @Override
+                    public void onBindViewHolder(MOTypedRecyclerAdapter adapter, RecyclerView.ViewHolder holder, Object data) {
+                        ((TextView) holder.itemView).setText("item:" + data);
+                    }
+
+                    @Override
+                    public boolean isDelegateOf(Class<?> clazz, Object item, int position) {
+                        return true;
+                    }
+                });
+                list.setAdapter(adapter1);
+                adapter1.addItems(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));
+                return holder;
+            }
+
+            @Override
+            public void onBindViewHolder(MOTypedRecyclerAdapter adapter, RecyclerView.ViewHolder holder, Object data) {
+                if (holder.itemView instanceof BouncingFrameLayout) {
+                    BouncingFrameLayout itemView = (BouncingFrameLayout) holder.itemView;
+                    itemView.setBouncingEventListener(type -> {
+                        int firstVisibleItemPosition = layout.findFirstVisibleItemPosition();
+                        int target = firstVisibleItemPosition;
+                        if (type == BouncingFrameLayout.FLAG_REACH_BOTTOM) {
+                            target += 1;
+                        } else if (type == BouncingFrameLayout.FLAG_REACH_TOP) {
+                            target -= 1;
+                        }
+
+                        if (target < 0) {
+                            target = 0;
+                        }
+                        layout.smoothScrollToPosition(recyclerView, null, target);
+
+                    });
+                }
+            }
+
+            @Override
+            public boolean isDelegateOf(Class<?> clazz, Object item, int position) {
+                return position % 2 == 1;
             }
         });
         adapter.addItems(Arrays.asList("1", "2", "3", "4"));
         recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutFrozen(true);
+        recyclerView.setLayoutFrozen(true);
 
-
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                Log.d("BannerLoop", "tick");
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                assert layoutManager != null;
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                RecyclerView.Adapter adapter = recyclerView.getAdapter();
-                assert adapter != null;
-                if (firstVisibleItemPosition + 1 < adapter.getItemCount()) {
-                    layoutManager.smoothScrollToPosition(recyclerView,null, firstVisibleItemPosition + 1);
-                } else {
-                    layoutManager.scrollToPosition(0);
-                }
-                recyclerView.postDelayed(this, 3000);
-            }
-        };
         //recyclerView.postDelayed(task, 3000);
     }
 }

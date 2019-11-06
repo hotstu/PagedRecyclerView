@@ -5,6 +5,10 @@
         <enum name="footer" value="1" />
         <enum name="content" value="2" />
     </attr>
+    <declare-styleable name="BouncingFrameLayout">
+        <attr name="headerActionHeight" format="dimension" />
+        <attr name="footerActionHeight" format="dimension" />
+    </declare-styleable>
     <declare-styleable name="BouncingFrameLayout_Layout">
         <attr name="layout_role" />
     </declare-styleable>

@@ -7,21 +7,25 @@
     tools:context=".MainActivity">
 
 
-    <ImageView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
         app:layout_role="content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:gravity="center"
         android:text="HEADER"
+        android:textColor="@color/mo_75_pure_black"
+        android:textSize="20sp"
         app:layout_role="header" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:gravity="center"
         android:text="FOOTER"
         app:layout_role="footer" />
 </github.hotstu.pagedrecyclerview.demo.BouncingFrameLayout>
