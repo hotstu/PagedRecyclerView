@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<github.hotstu.pagedrecyclerview.demo.BouncingFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<github.hotstu.pagedrecyclerview.BouncingFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -445,4 +445,4 @@
         android:text="FOOTER"
         android:gravity="center"
         app:layout_role="footer" />
-</github.hotstu.pagedrecyclerview.demo.BouncingFrameLayout>
+</github.hotstu.pagedrecyclerview.BouncingFrameLayout>

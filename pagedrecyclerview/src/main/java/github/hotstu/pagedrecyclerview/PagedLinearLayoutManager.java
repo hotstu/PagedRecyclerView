@@ -1,4 +1,4 @@
-package github.hotstu.pagedrecyclerview.demo;
+package github.hotstu.pagedrecyclerview;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -48,7 +48,7 @@ public class PagedLinearLayoutManager extends LinearLayoutManager {
     @Override
     public void onAttachedToWindow(RecyclerView view) {
         super.onAttachedToWindow(view);
-        view.setLayoutFrozen(true);
+        view.suppressLayout(true);
     }
 
 

@@ -14,18 +14,21 @@ import java.util.Arrays;
 
 import github.hotstu.naiue.widget.recycler.MOCommonViewHolder;
 import github.hotstu.naiue.widget.recycler.MOTypedRecyclerAdapter;
+import github.hotstu.pagedrecyclerview.BouncingEventListener;
+import github.hotstu.pagedrecyclerview.BouncingFrameLayout;
+import github.hotstu.pagedrecyclerview.PagedLinearLayoutManager;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         RecyclerView recyclerView = new RecyclerView(this);
         setContentView(recyclerView);
         PagedLinearLayoutManager layout = new PagedLinearLayoutManager(this);
         recyclerView.setLayoutManager(layout);
         MOTypedRecyclerAdapter adapter = new MOTypedRecyclerAdapter();
+        BouncingEventListener listener = type -> layout.forwardOrBackPage(recyclerView, type);
         adapter.addDelegate(new MOTypedRecyclerAdapter.AdapterDelegate() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(MOTypedRecyclerAdapter adapter, ViewGroup parent) {
@@ -37,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
             public void onBindViewHolder(MOTypedRecyclerAdapter adapter, RecyclerView.ViewHolder holder, Object data) {
                 if (holder.itemView instanceof BouncingFrameLayout) {
                     BouncingFrameLayout itemView = (BouncingFrameLayout) holder.itemView;
-                    itemView.setBouncingEventListener(type -> {
-                        layout.forwardOrBackPage(recyclerView, type);
-                    });
+                    itemView.setBouncingEventListener(listener);
                 }
             }
 
@@ -84,21 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onBindViewHolder(MOTypedRecyclerAdapter adapter, RecyclerView.ViewHolder holder, Object data) {
                 if (holder.itemView instanceof BouncingFrameLayout) {
                     BouncingFrameLayout itemView = (BouncingFrameLayout) holder.itemView;
-                    itemView.setBouncingEventListener(type -> {
-                        int firstVisibleItemPosition = layout.findFirstVisibleItemPosition();
-                        int target = firstVisibleItemPosition;
-                        if (type == BouncingFrameLayout.FLAG_REACH_BOTTOM) {
-                            target += 1;
-                        } else if (type == BouncingFrameLayout.FLAG_REACH_TOP) {
-                            target -= 1;
-                        }
-
-                        if (target < 0) {
-                            target = 0;
-                        }
-                        layout.smoothScrollToPosition(recyclerView, null, target);
-
-                    });
+                    itemView.setBouncingEventListener(listener);
                 }
             }
 

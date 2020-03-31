@@ -1,4 +1,4 @@
-package github.hotstu.pagedrecyclerview.demo;
+package github.hotstu.pagedrecyclerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -27,14 +27,10 @@ import java.lang.annotation.RetentionPolicy;
  * @since 10/31/19
  */
 public class BouncingFrameLayout extends FrameLayout {
-    public interface BouncingEventListener {
-        void onChange(@EventType int type);
-    }
 
     @IntDef({FLAG_REACH_TOP, FLAG_REACH_BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface EventType {
-
     }
 
     private static final String TAG = BouncingFrameLayout.class.getSimpleName();
