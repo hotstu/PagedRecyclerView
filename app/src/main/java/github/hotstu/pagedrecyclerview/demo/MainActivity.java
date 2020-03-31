@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = new RecyclerView(this);
         setContentView(recyclerView);
-        LinearLayoutManager layout = new LinearLayoutManager(this);
+        PagedLinearLayoutManager layout = new PagedLinearLayoutManager(this);
         recyclerView.setLayoutManager(layout);
         MOTypedRecyclerAdapter adapter = new MOTypedRecyclerAdapter();
         adapter.addDelegate(new MOTypedRecyclerAdapter.AdapterDelegate() {
@@ -38,19 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 if (holder.itemView instanceof BouncingFrameLayout) {
                     BouncingFrameLayout itemView = (BouncingFrameLayout) holder.itemView;
                     itemView.setBouncingEventListener(type -> {
-                        int firstVisibleItemPosition = layout.findFirstVisibleItemPosition();
-                        int target = firstVisibleItemPosition;
-                        if (type == BouncingFrameLayout.FLAG_REACH_BOTTOM) {
-                            target += 1;
-                        } else if (type == BouncingFrameLayout.FLAG_REACH_TOP) {
-                            target -= 1;
-                        }
-
-                        if (target < 0) {
-                            target = 0;
-                        }
-                        layout.smoothScrollToPosition(recyclerView, null, target);
-
+                        layout.forwardOrBackPage(recyclerView, type);
                     });
                 }
             }
@@ -121,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
         });
         adapter.addItems(Arrays.asList("1", "2", "3", "4"));
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutFrozen(true);
-
         //recyclerView.postDelayed(task, 3000);
     }
 }
