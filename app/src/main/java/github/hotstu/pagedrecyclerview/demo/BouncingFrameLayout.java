@@ -3,7 +3,6 @@ package github.hotstu.pagedrecyclerview.demo;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -276,16 +275,17 @@ public class BouncingFrameLayout extends FrameLayout {
             scrollTo(0, currY);
             postInvalidateOnAnimation();
         } else {
-            Log.d(TAG, "" + flags + "," + mIsBeingDragged + "," + mScroller.isFinished());
-            if (flags > 0 && !mIsBeingDragged && mScroller.isFinished()) {
-                if (flags != FLAG_REACH_BOTTOM && flags != FLAG_REACH_TOP) {
-                    throw new IllegalStateException("flags ==" + flags);
-                }
-                if (mBouncingEventListener != null) {
-                    mBouncingEventListener.onChange(flags);
-                }
-                flags = 0;
+            //Log.d(TAG, "" + flags + "," + mIsBeingDragged + "," + mScroller.isFinished());
+
+        }
+        if (flags > 0 && !mIsBeingDragged ) {
+            if (flags != FLAG_REACH_BOTTOM && flags != FLAG_REACH_TOP) {
+                throw new IllegalStateException("flags ==" + flags);
             }
+            if (mBouncingEventListener != null) {
+                mBouncingEventListener.onChange(flags);
+            }
+            flags = 0;
         }
     }
 
