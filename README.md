@@ -10,7 +10,7 @@ PagedRecyclerView
 
 亮点是实现非常简单
 
- the simple, the better
+ the simpler, the better
 
 ### How to use
  ```groovy
